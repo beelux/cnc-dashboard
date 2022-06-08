@@ -9,7 +9,7 @@ generateKey() {
 }
 
 deployKey() {
-	sshpass -p alarm ssh-copy-id -i ./sshKey.pub -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o PubkeyAuthentication=false alarm@$1
+	sshpass -p alarm ssh-copy-id -i ./sshKey.pub -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o PubkeyAuthentication=false alarm@"$1"
 }
 
 # If keys are present, we just need to deploy it and destroy the SSH Agent
