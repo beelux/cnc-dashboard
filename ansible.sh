@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 ansible-galaxy install -r requirements.yml
 
 if [ -z ${1+x} ]; then
