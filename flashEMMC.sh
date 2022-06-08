@@ -7,7 +7,7 @@ HASH_LINK=https://de3.mirror.archlinuxarm.org/os/
 
 
 checkRoot() {
-	[ `id -u` -eq 0 ] || { echo "Run script (as root) or (with sudo)"; exit 1; }
+	[[ "$EUID" -eq 0 ]] || { echo "Run script (as root) or (with sudo)"; exit 1; }
 }
 
 diskInfo() {
