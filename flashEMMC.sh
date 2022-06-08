@@ -58,9 +58,9 @@ createEXT4fs() {
 
 cdToScript() {
 	TMP=$(dirname "$0")
-	cd "$TMP"
+	cd "$TMP" || exit
 	mkdir flashEMMC
-	cd flashEMMC
+	cd flashEMMC || exit
 }
 
 unmountFS() {
@@ -91,7 +91,7 @@ mountFS() {
 }
 
 flashBootloader() {
-	cd root/boot
+	cd root/boot || exit
 	./sd_fusing.sh /dev/"${DEV}"
 	cd ../..
 }
