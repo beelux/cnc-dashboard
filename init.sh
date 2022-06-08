@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 generateKey() {
 	touch sshKey
 	touch sshKey.pub
