@@ -1,0 +1,21 @@
+# This task list sets up the basic tools
+---
+- name: Install browser
+  become: yes
+  community.general.pacman:
+    name: firefox
+    state: present
+- name: Install Xorg & wm & tools
+  become: yes
+  community.general.pacman:
+    name:
+      - xorg-xinit
+      - xorg-server
+      - xorg-xset
+      - xorg-setxkbmap
+      - unclutter
+      - openbox
+      - xf86-video-odroid-c2
+      - ttf-liberation
+      - barrier-headless
+    state: present

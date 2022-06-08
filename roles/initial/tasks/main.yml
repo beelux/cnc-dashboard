@@ -1,0 +1,24 @@
+# This role copies over the right SSH host keys, sets up some tools and creates the users
+- name: Set up host ssh keys
+  import_tasks: ssh_host.yml
+- name: Update system
+  become: yes
+  become_method: su
+  become_user: "root"
+  vars:
+    ansible_become_pass: root
+  community.general.pacman:
+    update_cache: yes
+    upgrade: yes
+- name: Install basic tools (sudo, vim, etc.)
+  import_tasks: tools.yml
+- name: Create users
+  import_tasks: users.yml
+- name: Change hostname
+  become: yes
+  become_method: su
+  become_user: "root"
+  vars:
+    ansible_become_pass: root
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"

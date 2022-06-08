@@ -1,0 +1,8 @@
+- name: Local SSH keypair and remote deployment
+  delegate_to: localhost
+  throttle: 1
+  ansible.builtin.script:
+    chdir: "{{ inventory_dir }}"
+    cmd: init.sh "{{ ansible_host }}"
+  register: cmd_reg
+- debug: msg="{{ cmd_reg.stdout }}"

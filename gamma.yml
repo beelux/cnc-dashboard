@@ -1,0 +1,32 @@
+---
+- name: Create local key and deploy it
+  hosts: mcr-gamma
+  remote_user: null
+  gather_facts: false
+  roles:
+    - localKey
+
+- name: Install python
+  hosts: mcr-gamma
+  remote_user: null
+  gather_facts: false
+  roles:
+    - python
+
+- name: Setup pi
+  hosts: mcr-gamma
+  remote_user: alarm
+  vars:
+    ansible_host_key_checking: false
+    ansible_ssh_host_key_checking: false
+  roles:
+    - initial
+
+- name: Setup kiosk
+  hosts: mcr-gamma
+  remote_user: odroid
+  vars:
+    ansible_host_key_checking: false
+    ansible_ssh_host_key_checking: false
+  roles:
+    - kiosk

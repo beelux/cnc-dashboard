@@ -1,0 +1,61 @@
+section: screens
+	mcr-alpha:
+		halfDuplexCapsLock = false
+		halfDuplexNumLock = false
+		halfDuplexScrollLock = false
+		xtestIsXineramaUnaware = false
+		preserveFocus = false
+		switchCorners = none 
+		switchCornerSize = 0
+	mcr-beta:
+		halfDuplexCapsLock = false
+		halfDuplexNumLock = false
+		halfDuplexScrollLock = false
+		xtestIsXineramaUnaware = false
+		preserveFocus = false
+		switchCorners = none 
+		switchCornerSize = 0
+	mcr-gamma:
+		halfDuplexCapsLock = false
+		halfDuplexNumLock = false
+		halfDuplexScrollLock = false
+		xtestIsXineramaUnaware = false
+		preserveFocus = false
+		switchCorners = none 
+		switchCornerSize = 0
+	mcr-delta:
+		halfDuplexCapsLock = false
+		halfDuplexNumLock = false
+		halfDuplexScrollLock = false
+		xtestIsXineramaUnaware = false
+		preserveFocus = false
+		switchCorners = none 
+		switchCornerSize = 0
+end
+
+section: aliases
+end
+
+section: links
+	mcr-alpha:
+		right = mcr-beta
+		down = mcr-gamma
+	mcr-beta:
+		left = mcr-alpha
+		down = mcr-delta
+	mcr-gamma:
+		right = mcr-delta
+		up = mcr-alpha
+	mcr-delta:
+		left = mcr-gamma
+		up = mcr-beta
+end
+
+section: options
+	relativeMouseMoves = false
+	screenSaverSync = true
+	win32KeepForeground = false
+	clipboardSharing = true
+	switchCorners = none 
+	switchCornerSize = 0
+end

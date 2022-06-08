@@ -1,0 +1,46 @@
+# This task list sets up the window manager
+---
+- name: Create autologin directory
+  become: yes
+  become_user: root
+  ansible.builtin.file:
+    state: directory
+    path: '/etc/systemd/system/getty@tty1.service.d/'
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Autologin
+  become: yes
+  become_user: root
+  ansible.builtin.copy:
+    src: agettyAutologin
+    dest: '/etc/systemd/system/getty@tty1.service.d/override.conf'
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: xinitrc
+  ansible.builtin.copy:
+    dest: ~/.xinitrc
+    content: 'exec openbox-session'
+    mode: 0644
+
+- name: Create autologin directory
+  ansible.builtin.file:
+    state: directory
+    path: '~/.config/openbox'
+    mode: '0755'
+
+- name: Setup openbox autostart
+  ansible.builtin.template:
+    src: openboxAutocomplete.j2
+    dest: ~/.config/openbox/autostart
+    mode: 0644
+
+- name: Autostart X on tty1 on odroid
+  ansible.builtin.lineinfile:
+    path: '~/.bashrc'
+    state: present
+    line: '[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && xinit'
+    mode: 0644

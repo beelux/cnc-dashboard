@@ -1,0 +1,63 @@
+# This task list sets up the basic tools
+---
+- name: Install basic tools
+  become: yes
+  become_method: su
+  become_user: "root"
+  vars:
+      ansible_become_pass: root
+  block:
+    - name: Update pacman cache and update
+      community.general.pacman:
+        update_cache: no
+        upgrade: yes
+
+    - name: Install tools
+      community.general.pacman:
+        state: installed
+        name:
+          - sudo
+          - vim
+          - htop
+          - base-devel
+          - git
+
+    - name: Enable sudo for wheel
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        state: present
+        line: '%wheel ALL=(ALL:ALL) NOPASSWD: ALL'
+        validate: /usr/sbin/visudo -cf %s
+
+    - name: Add default user to wheel group
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        append: yes
+        groups: wheel
+
+- name: Install paru
+  block:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: pacman
+
+    - name: Install paru if not already installed
+      when: "'paru-bin' not in ansible_facts.packages"
+      block:
+        - name: Install necessary tools
+          become: yes
+          become_method: su
+          become_user: "root"
+          vars:
+            ansible_become_pass: root
+          community.general.pacman:
+            state: installed
+            name:
+              - base-devel
+              - git
+
+        - name: Install paru
+          kewlfft.aur.aur:
+            name: paru-bin
+            use: makepkg
+            state: present

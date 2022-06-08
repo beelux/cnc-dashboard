@@ -1,0 +1,3 @@
+[submodule "roles/initial/files"]
+	path = roles/initial/files
+	url = ssh://kallithea@projects.c3l.lu/ChaosStuff/cnc-host-keys

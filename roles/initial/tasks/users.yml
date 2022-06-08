@@ -1,0 +1,50 @@
+# This task list sets up the needed users
+---
+- name: Create users
+  become: yes
+  become_method: su
+  become_user: "root"
+  vars:
+    ansible_become_pass: root
+  block:
+    - name: Standard user
+      vars:
+        username: odroid
+      block:
+        - name: Create user
+          ansible.builtin.user:
+            name: "{{ username }}"
+            create_home: yes
+            append: yes
+            groups: wheel, video
+            state: present
+            password: "{{ username | password_hash('sha512') }}"
+            shell: "/bin/bash"
+        - name: Add ssh key to odroid
+          ansible.posix.authorized_key:
+            user: "{{ username }}"
+            key: "{{ lookup('file', ansible_ssh_public_key_file) }}"
+
+    - name: autom8 user
+      vars:
+        username: autom8
+      block:
+        - name: Create user
+          ansible.builtin.user:
+            name: "{{ username }}"
+            create_home: yes
+            state: present
+
+        - name: add SSH key
+          ansible.posix.authorized_key:
+            user: "{{ username }}"
+            state: present
+            key: "{{ lookup('file', 'autom8_public_key') }}"
+            manage_dir: yes
+
+        - name: allow shutting down
+          ansible.builtin.lineinfile:
+            path: /etc/sudoers
+            state: present
+            line: 'ALL ALL=NOPASSWD: /sbin/halt, /sbin/reboot, /sbin/poweroff, /sbin/shutdown now'
+            validate: /usr/sbin/visudo -cf %s

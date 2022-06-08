@@ -1,0 +1,8 @@
+(sleep 1s && xset s off) &
+(sleep 1s && xset s noblank) &
+(sleep 1s && xset -dpms) &
+(sleep 1s && setxkbmap -option terminate:ctrl_alt_bksp) &
+(sleep 1s && unclutter) &
+(sleep 1s && firefox --kiosk {{ dashboardUrl }}) &
+(sleep 1s && {{ barrierCommand }})
+

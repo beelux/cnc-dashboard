@@ -1,0 +1,45 @@
+# This task list copies over the right SSH host keys
+# https://linuxdigest.com/howto/ansible-copy-multiple-files/
+# https://stackoverflow.com/questions/53102214/ansible-how-can-i-copy-files-to-hosts-depending-on-group-membership
+# https://stackoverflow.com/questions/70378717/ansible-how-to-delete-files-starting-with-a-specific-name
+---
+- name: Setup ssh keys as root
+  become: yes
+  become_method: su
+  become_user: "root"
+  vars:
+    ansible_become_pass: root
+  block:
+    - name: List existing host keys
+      ansible.builtin.find:
+        paths: /etc/ssh/
+        patterns: "^ssh_host_.+$"
+        use_regex: true
+      register: ssh_host_keys
+
+    - name: Delete existing host keys
+      ansible.builtin.file:
+        state: absent
+        path: "{{ item }}"
+      loop: "{{ ssh_host_keys.files|map(attribute='path')|list }}"
+
+    - name: Copy SSH host keys
+      ansible.builtin.copy:
+        src: "{{ inventory_hostname }}/"
+        dest: /etc/ssh
+        owner: root
+        group: root
+        mode: '600'
+
+    - name: List public host keys
+      ansible.builtin.find:
+        paths: /etc/ssh/
+        patterns: "^ssh_host_.+_pub$"
+        use_regex: true
+      register: ssh_host_keys_pub
+
+    - name: change visibility of host public keys
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: '644'
+      loop: "{{ ssh_host_keys_pub.files|map(attribute='path')|list }}"

@@ -1,0 +1,12 @@
+# This role sets up a kiosk
+- name: Install software (browser, KVM)
+  import_tasks: software.yml
+- name: Setup barrier
+  import_tasks: barrier.yml
+- name: Setup window manager
+  import_tasks: wm.yml
+- name: Reboot
+  become: yes
+  become_user: root
+  ansible.builtin.reboot:
+    msg: "Rebooting kiosk after setup..."

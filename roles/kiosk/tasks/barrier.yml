@@ -1,0 +1,20 @@
+# This task list sets up barrier
+---
+- name: Copy barrier config
+  ansible.builtin.copy:
+    dest: ~/barrierConfiguration
+    src: barrierConfiguration
+    mode: 0644
+
+- name: Copy barrier SSL files
+  ansible.builtin.copy:
+    dest: ~/.local/share/barrier/SSL/Fingerprints/
+    src: barrier/SSL/Fingerprints/
+    mode: 0644
+    directory_mode: 0755
+
+- name: Make key read only to user
+  ansible.builtin.copy:
+    mode: '0600'
+    src: barrier/SSL/Barrier.pem
+    dest: '~/.local/share/barrier/SSL/Barrier.pem'
