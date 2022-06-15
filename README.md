@@ -1,12 +1,10 @@
 # Command and Control
 These scripts automate the [Command and Control](https://wiki.c3l.lu/doku.php?id=projects:hardware:command_and_control) SBC installation as much as possible.
 
-Note that git submodules **must** be initalized, they contain crucial information such as
-the [SSH host keys and the public key of autom8](https://projects.c3l.lu/ChaosStuff/cnc-host-keys). Special access is needed.
+Note that git submodules **must** be initalized, they contain crucial information such as the [SSH host keys and the public key of autom8](https://projects.c3l.lu/ChaosStuff/cnc-host-keys). Special access is needed.
 
 ## How to use
-Flash the image on the eMMC using the flashEMMC.sh script (see section).
-Then use ansible.sh to install and configure the installation.
+Flash the image on the eMMC using the flashEMMC.sh script (see section). Then use ansible.sh to install and configure the installation.
 
 ### Structure of submodule
 ```
