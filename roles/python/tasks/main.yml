@@ -1,5 +1,6 @@
 # $DATE is host time, which we force set on the target machine.
 # Allows downloading stuff without TLS errors
+# Expect timeout is needed, otherwise by default it terminates itself after 10 seconds
 - name: Pacman keyring + Python installation
   delegate_to: localhost
   ansible.builtin.shell: |
