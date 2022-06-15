@@ -6,6 +6,13 @@ Note that git submodules **must** be initalized, they contain crucial informatio
 ## How to use
 Flash the image on the eMMC using the flashEMMC.sh script (see section). Then use ansible.sh to install and configure the installation.
 
+It is possible that your SSH agent might break some things: unlocked keys seem to be prioritized over a manually input key (using -i) and a password (challenge) authentication. This results in the server disconnecting the user with a "Too many authentication failures" error.
+
+To avoid this, "crippling" the SSH agent might be necessary:
+```bash
+export SSH_AUTH_SOCK=/dev/null
+```
+
 ### Structure of submodule
 ```
 files
@@ -42,3 +49,11 @@ Usage:
 `sudo ./ansible.sh [playbook file, if none, site.yml]`
 
 It simply verifies that the ansible requirements.txt are met and runs through the specific playbook.
+
+### init.sh
+This script used by the "localKey" role to setup key-based authentication.
+
+It generates a local ed25519 ssh key in case it doesn't exist, then copies it over with ssh-pass and ssh-copy-id to each of the given hosts.
+
+Each parameter is a different host. For example, setting up key based authentication on `mcr-alpha.lan` and `mcr-beta.lan`:
+`./init.sh "mcr-alpha.lan" "mcr-beta.lan"`
