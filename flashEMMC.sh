@@ -7,12 +7,12 @@ HASH_LINK=https://de3.mirror.archlinuxarm.org/os/
 
 
 checkRoot() {
-	[ `id -u` -eq 0 ] || { echo "Run script (as root) or (with sudo)"; exit 1; }
+	[[ "$EUID" -eq 0 ]] || { echo "Run script (as root) or (with sudo)"; exit 1; }
 }
 
 diskInfo() {
-	[[ -e /dev/$DEV ]] || { echo "ERROR: Drive doesn't exist" && exit 1; }
-	fdisk -l /dev/$DEV
+	[[ -e /dev/"$DEV" ]] || { echo "ERROR: Drive doesn't exist" && exit 1; }
+	fdisk -l /dev/"$DEV"
 	echo
 }
 
@@ -29,18 +29,18 @@ verifyRightDrive() {
 }
 
 umountInitially() {
-	BLKDEVS=$(find /dev/ -name ${DEV}*)
+	BLKDEVS=$(find /dev/ -name "${DEV}"*)
 	for LINE in $BLKDEVS; do
-		sudo umount $LINE
+		sudo umount "$LINE"
 	done
 }
 
 zeroBeginning() {
-	dd if=/dev/zero of=/dev/$DEV bs=1M count=8
+	dd if=/dev/zero of=/dev/"$DEV" bs=1M count=8
 }
 
 partitionEMMC() {
-fdisk -W always /dev/$DEV << EOF
+fdisk -W always /dev/"$DEV" << EOF
 o
 n
 p
@@ -53,14 +53,14 @@ EOF
 }
 
 createEXT4fs() {
-	mkfs.ext4 -O ^metadata_csum,^64bit /dev/${DEV}1
+	mkfs.ext4 -O ^metadata_csum,^64bit /dev/"${DEV}"1
 }
 
 cdToScript() {
 	TMP=$(dirname "$0")
-	cd $TMP
+	cd "$TMP" || exit
 	mkdir flashEMMC
-	cd flashEMMC
+	cd flashEMMC || exit
 }
 
 unmountFS() {
@@ -86,13 +86,13 @@ extractImage() {
 
 mountFS() {
 	mkdir root
-	mount /dev/${DEV}1 root
+	mount /dev/"${DEV}"1 root
 	[ -e ${IMAGE_NAME}.md5 ] && md5sum -c ${IMAGE_NAME}.md5 || downloadImage && extractImage
 }
 
 flashBootloader() {
-	cd root/boot
-	./sd_fusing.sh /dev/${DEV}
+	cd root/boot || exit
+	./sd_fusing.sh /dev/"${DEV}"
 	cd ../..
 }
 
